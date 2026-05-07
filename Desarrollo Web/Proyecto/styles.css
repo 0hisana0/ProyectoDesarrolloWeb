@@ -1,0 +1,151 @@
+body {
+    font-family: arial;
+    background: #f7f7f7;
+    margin: 0;
+    color: #222;
+}
+
+.barra {
+    background: white;
+    padding: 14px 24px;
+    border-bottom: 3px solid #ff6b6b;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.barra b {
+    color: #ff6b6b;
+    font-size: 22px;
+}
+
+.barra a {
+    color: #888;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.barra a:hover {
+    color: #ff6b6b;
+}
+
+.caja {
+    background: white;
+    width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+
+.caja p {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 8px;
+}
+
+.caja textarea {
+    width: 100%;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 14px;
+    resize: none;
+    outline: none;
+    color: #222;
+    font-family: arial;
+}
+
+.caja textarea:focus {
+    border-color: #ff6b6b;
+}
+
+.tarjeta {
+    background: white;
+    width: 500px;
+    margin: 0 auto;
+    margin-bottom: 12px;
+    padding: 18px;
+    border-radius: 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+
+.tarjeta p {
+    margin-bottom: 10px;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+button {
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    padding: 9px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #ff4f4f;
+}
+
+.btn-like {
+    background: white;
+    color: #aaa;
+    border: 2px solid #eee;
+    padding: 5px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 13px;
+    margin-right: 6px;
+    font-weight: bold;
+}
+
+.btn-like:hover {
+    border-color: #ff6b6b;
+    color: #ff6b6b;
+}
+
+.comentarios {
+    margin-top: 12px;
+    border-top: 2px solid #f7f7f7;
+    padding-top: 12px;
+    font-size: 13px;
+}
+
+.comentarios input {
+    border: 2px solid #eee;
+    border-radius: 20px;
+    padding: 6px 12px;
+    width: 250px;
+    font-size: 13px;
+    outline: none;
+    font-family: arial;
+}
+
+.comentarios input:focus {
+    border-color: #ff6b6b;
+}
+
+.comentarios button {
+    padding: 6px 14px;
+    font-size: 13px;
+    margin-left: 6px;
+    border-radius: 20px;
+}
+
+.lista-comentarios p {
+    background: #f7f7f7;
+    padding: 7px 12px;
+    border-radius: 10px;
+    margin-bottom: 6px;
+    color: #555;
+}
+
+.caja h3 {
+    color: #ff6b6b;
+    margin-bottom: 12px;
+}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Red Social</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="barra">
+    <b>Santa Clara</b> *nombre provicional aksdjajsk*
+    <a href="#" onclick="verFeed()">Inicio</a>
+    <a href="#" onclick="verPerfil()">Mi perfil</a>
+</div>
+
+<br>
+
+<div id="pagina-feed">
+
+    <div class="caja">
+        <p>¡Comparte algo nuevo!</p>
+        <textarea id="texto" rows="3" cols="45" placeholder="¿Qué hay de nuevo hoy?"></textarea>
+        <br><br>
+        <button onclick="publicar()">Publicar</button>
+    </div>
+
+    <br>
+
+    <div id="feed"></div>
+
+</div>
+
+<div id="pagina-perfil" style="display:none">
+    <div class="caja">
+        <h3>Mi perfil</h3>
+        <p><b>Nombre:</b> Andres Soria</p>
+        <p><b>Usuario:</b> @andressoria</p>
+        <p><b>Bio:</b> hola soy andres y tengo una navi :)</p>
+        <br>
+        <p>publicaciones: <b id="total-posts">0</b></p>
+    </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
