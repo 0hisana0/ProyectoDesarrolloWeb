@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <%- include('partials/head', { title: 'Cursos' }) %>
+</head>
+
+<body>
+
+  <%- include('partials/navbar', { currentPath: '/cursos-view' }) %>
+
+    <main>
+      <div class="page-header">
+        <h1>Todos los <span>Cursos</span></h1>
+        <p>PROGRAMACIÓN · MATEMÁTICAS · BASES DE DATOS</p>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('programacion', this)">PROGRAMACIÓN</button>
+        <button class="tab-btn" onclick="showTab('matematicas', this)">MATEMÁTICAS</button>
+        <button class="tab-btn" onclick="showTab('bases_de_datos', this)">BASES DE DATOS</button>
+      </div>
+
+      <!-- Programación -->
+      <div id="tab-programacion" class="tab-panel">
+        <% if (programacion && programacion.length> 0) { %>
+          <div class="cards-grid">
+            <% programacion.forEach(curso=> { %>
+              <div class="card">
+                <div class="card-tag">
+                  <%= curso.lenguaje %>
+                </div>
+                <h3>
+                  <%= curso.titulo %>
+                </h3>
+                <div class="meta">
+                  <span class="badge badge-nivel-<%= curso.nivel %>">
+                    <%= curso.nivel %>
+                  </span>
+                  <span class="badge badge-views">
+                    <%= curso.vistas.toLocaleString() %> vistas
+                  </span>
+                </div>
+              </div>
+              <% }) %>
+          </div>
+          <% } else { %>
+            <p class="empty">// sin cursos disponibles</p>
+            <% } %>
+      </div>
+
+      <!-- Matemáticas -->
+      <div id="tab-matematicas" class="tab-panel" style="display:none">
+        <% if (matematicas && matematicas.length> 0) { %>
+          <div class="cards-grid">
+            <% matematicas.forEach(curso=> { %>
+              <div class="card">
+                <div class="card-tag">
+                  <%= curso.tema %>
+                </div>
+                <h3>
+                  <%= curso.titulo %>
+                </h3>
+                <div class="meta">
+                  <span class="badge badge-nivel-<%= curso.nivel %>">
+                    <%= curso.nivel %>
+                  </span>
+                  <span class="badge badge-views">
+                    <%= curso.vistas.toLocaleString() %> vistas
+                  </span>
+                </div>
+              </div>
+              <% }) %>
+          </div>
+          <% } else { %>
+            <p class="empty">// sin cursos disponibles</p>
+            <% } %>
+      </div>
+
+      <!-- Bases de datos -->
+      <div id="tab-bases_de_datos" class="tab-panel" style="display:none">
+        <% if (bases_de_datos && bases_de_datos.length> 0) { %>
+          <div class="cards-grid">
+            <% bases_de_datos.forEach(curso=> { %>
+              <div class="card">
+                <div class="card-tag">
+                  <%= curso.tecnologia %>
+                </div>
+                <h3>
+                  <%= curso.titulo %>
+                </h3>
+                <div class="meta">
+                  <span class="badge badge-nivel-<%= curso.nivel %>">
+                    <%= curso.nivel %>
+                  </span>
+                  <span class="badge badge-views">
+                    <%= curso.vistas.toLocaleString() %> vistas
+                  </span>
+                </div>
+              </div>
+              <% }) %>
+          </div>
+          <% } else { %>
+            <p class="empty">// sin cursos disponibles</p>
+            <% } %>
+      </div>
+    </main>
+
+    <footer>© 2651 CURSOSDB — TODOS LOS DERECHOS RESERVADOS</footer>
+
+    <script>
+      function showTab(name, btn) {
+        document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none')
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'))
+        document.getElementById('tab-' + name).style.display = 'block'
+        btn.classList.add('active')
+      }
+    </script>
+
+</body>
+
+</html>

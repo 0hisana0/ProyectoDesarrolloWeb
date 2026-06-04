@@ -1,0 +1,9 @@
+node_modules
+.git
+database
+data
+docker-compose.yml
+api
+*.md
+Desarrollo Web
+.gitignore

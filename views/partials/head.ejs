@@ -1,0 +1,551 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  <%= title %> | CursosDB
+</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap');
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: #000000;
+    color: #e8e8e0;
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 2.5rem;
+    border-bottom: 1px solid #2a2a2a;
+    background: #0f0f0f;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  nav .logo {
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: #c8f04a;
+    text-decoration: none;
+  }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+  }
+
+  nav ul a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.78rem;
+    color: #888;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: color 0.2s;
+  }
+
+  nav ul a:hover,
+  nav ul a.active {
+    color: #c8f04a;
+  }
+
+  /* NAV USER */
+  .nav-user {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .nav-user-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: #888;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .nav-user-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #c8f04a;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  .nav-user-badge {
+    font-size: 0.6rem;
+    padding: 0.15rem 0.45rem;
+    background: #1e2e0a;
+    color: #c8f04a;
+    border: 1px solid #3a5010;
+    border-radius: 2px;
+    letter-spacing: 0.08em;
+  }
+
+  .btn-logout {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    padding: 0.4rem 0.9rem;
+    background: transparent;
+    border: 1px solid #2a2a2a;
+    border-radius: 3px;
+    color: #555;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .btn-logout:hover {
+    color: #f07a4a;
+    border-color: #f07a4a;
+  }
+
+  .btn-nav-login {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    padding: 0.4rem 0.9rem;
+    background: transparent;
+    border: 1px solid #c8f04a;
+    border-radius: 3px;
+    color: #c8f04a;
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .btn-nav-login:hover {
+    background: #c8f04a;
+    color: #0f0f0f;
+  }
+
+  /* LAYOUT */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+  }
+
+  /* PAGE HEADER */
+  .page-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .page-header h1 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: #e8e8e0;
+  }
+
+  .page-header h1 span {
+    color: #c8f04a;
+  }
+
+  .page-header p {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: #555;
+    margin-top: 0.6rem;
+    letter-spacing: 0.03em;
+  }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #2a2a2a;
+    padding-bottom: 0;
+  }
+
+  .tab-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    padding: 0.6rem 1.2rem;
+    background: none;
+    border: none;
+    color: #555;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    letter-spacing: 0.05em;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .tab-btn:hover {
+    color: #e8e8e0;
+  }
+
+  .tab-btn.active {
+    color: #c8f04a;
+    border-bottom-color: #c8f04a;
+  }
+
+  /* CARDS GRID */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.2rem;
+  }
+
+  .card {
+    background: #161616;
+    border: 1px solid #2a2a2a;
+    border-radius: 4px;
+    padding: 1.5rem;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .card:hover {
+    border-color: #c8f04a;
+    transform: translateY(-2px);
+  }
+
+  .card .card-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    color: #c8f04a;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+
+  .card h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+  }
+
+  .card .meta {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 2px;
+    letter-spacing: 0.05em;
+  }
+
+  .badge-nivel-basico {
+    background: #1a2e1a;
+    color: #6fcf6f;
+  }
+
+  .badge-nivel-intermedio {
+    background: #2e261a;
+    color: #f0b84a;
+  }
+
+  .badge-nivel-avanzado {
+    background: #2e1a1a;
+    color: #f07a4a;
+  }
+
+  .badge-views {
+    background: #1c1c1c;
+    color: #555;
+  }
+
+  /* EMPTY STATE */
+  .empty {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    color: #444;
+    padding: 3rem 0;
+    text-align: center;
+  }
+
+  /* TABLE */
+  .table-wrap {
+    overflow-x: auto;
+    border: 1px solid #222;
+    border-radius: 6px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    min-width: 700px;
+  }
+
+  thead {
+    background: #161616;
+  }
+
+  thead tr {
+    border-bottom: 2px solid #2a2a2a;
+  }
+
+  thead th {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    color: #c8f04a;
+    text-align: left;
+    padding: 1rem 1.4rem;
+    white-space: nowrap;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid #1a1a1a;
+    transition: background 0.15s;
+  }
+
+  tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  tbody tr:hover {
+    background: #181818;
+  }
+
+  td {
+    padding: 1rem 1.4rem;
+    vertical-align: middle;
+    color: #ccc;
+  }
+
+  td:first-child {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: #444;
+    width: 48px;
+  }
+
+  /* ACTION BUTTONS */
+  .btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    padding: 0.45rem 1rem;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.15s, color 0.15s, transform 0.1s;
+    white-space: nowrap;
+  }
+
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+
+  .btn:active {
+    transform: translateY(0);
+  }
+
+  .btn-primary {
+    background: #c8f04a;
+    color: #0f0f0f;
+    border-color: #c8f04a;
+    font-weight: 700;
+  }
+
+  .btn-primary:hover {
+    background: #d6f56e;
+    border-color: #d6f56e;
+  }
+
+  .btn-edit {
+    background: #2e2612;
+    color: #f0b84a;
+    border-color: #4a3a18;
+  }
+
+  .btn-edit:hover {
+    background: #3a3018;
+    border-color: #f0b84a;
+  }
+
+  .btn-delete {
+    background: #2e1a12;
+    color: #f07a4a;
+    border-color: #4a2a18;
+  }
+
+  .btn-delete:hover {
+    background: #3a2018;
+    border-color: #f07a4a;
+  }
+
+  .btn-cancel {
+    background: transparent;
+    color: #666;
+    border-color: #333;
+  }
+
+  .btn-cancel:hover {
+    color: #999;
+    border-color: #555;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .section-header h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  /* FORM */
+  .form-box {
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 6px;
+    padding: 2rem 2.5rem;
+    max-width: 600px;
+  }
+
+  .form-box h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 1.8rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid #222;
+    color: #e8e8e0;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 1.5rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.2rem;
+  }
+
+  .form-group.full {
+    grid-column: 1 / -1;
+  }
+
+  .form-group label {
+    display: block;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: #555;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.45rem;
+    text-transform: uppercase;
+  }
+
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    background: #0d0d0d;
+    border: 1px solid #2a2a2a;
+    border-radius: 3px;
+    color: #e8e8e0;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.82rem;
+    padding: 0.65rem 0.9rem;
+    outline: none;
+    transition: border-color 0.15s, background 0.15s;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus {
+    border-color: #c8f04a;
+    background: #111;
+  }
+
+  .form-group input::placeholder {
+    color: #333;
+  }
+
+  .form-group select option {
+    background: #111;
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: 1.8rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid #1a1a1a;
+  }
+
+  /* ALERT / FLASH */
+  .alert {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    padding: 0.8rem 1.2rem;
+    border-radius: 2px;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.03em;
+  }
+
+  .alert-success {
+    background: #1a2e1a;
+    color: #6fcf6f;
+    border-left: 3px solid #6fcf6f;
+  }
+
+  .alert-error {
+    background: #2e1a1a;
+    color: #f07a4a;
+    border-left: 3px solid #f07a4a;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid #1e1e1e;
+    padding: 1.5rem 2.5rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: #333;
+    text-align: center;
+    letter-spacing: 0.05em;
+  }
+</style>
+
+<script>
+  // Verificar sesión activa cada vez que la página se hace visible
+  // Cubre el caso del botón "atrás" si la caché no fue desactivada
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      fetch('/api/check-session', { method: 'GET' })
+        .then(res => {
+          if (res.status === 401) {
+            window.location.replace('/login')
+          }
+        })
+        .catch(() => {
+          // Si falla la petición, redirigir por seguridad
+          window.location.replace('/login')
+        })
+    }
+  })
+</script>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <%- include('partials/head', { title: 'Crear Cuenta' }) %>
+    <style>
+      .auth-wrapper {
+        min-height: calc(100vh - 60px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem 1rem;
+      }
+
+      .auth-box {
+        width: 100%;
+        max-width: 420px;
+      }
+
+      .auth-header {
+        margin-bottom: 2rem;
+      }
+
+      .auth-header .label {
+        font-family: 'Space Mono', monospace;
+        font-size: 0.72rem;
+        color: #c8f04a;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        margin-bottom: 0.8rem;
+      }
+
+      .auth-header h1 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        line-height: 1.1;
+      }
+
+      .auth-header h1 span {
+        color: #c8f04a;
+      }
+
+      .password-hint {
+        font-family: 'Space Mono', monospace;
+        font-size: 0.65rem;
+        color: #444;
+        margin-top: 0.4rem;
+        letter-spacing: 0.03em;
+      }
+
+      .auth-footer-link {
+        font-family: 'Space Mono', monospace;
+        font-size: 0.72rem;
+        color: #555;
+        margin-top: 1.5rem;
+        text-align: center;
+      }
+
+      .auth-footer-link a {
+        color: #c8f04a;
+        text-decoration: none;
+      }
+
+      .auth-footer-link a:hover {
+        text-decoration: underline;
+      }
+    </style>
+</head>
+
+<body>
+
+  <%- include('partials/navbar', { currentPath: '/register' }) %>
+
+    <div class="auth-wrapper">
+      <div class="auth-box">
+
+        <div class="auth-header">
+          <p class="label">Nueva cuenta</p>
+          <h1>Crear <span>Registro</span></h1>
+        </div>
+
+        <div id="alert-area"></div>
+
+        <div class="form-box">
+          <div class="form-group">
+            <label for="nombre">NOMBRE</label>
+            <input type="text" id="nombre" placeholder="Tu nombre" autocomplete="name">
+          </div>
+
+          <div class="form-group">
+            <label for="email">EMAIL</label>
+            <input type="email" id="email" placeholder="correo@ejemplo.com" autocomplete="email">
+          </div>
+
+          <div class="form-group">
+            <label for="password">CONTRASEÑA</label>
+            <input type="password" id="password" placeholder="••••••••" autocomplete="new-password">
+            <p class="password-hint">Mínimo 8 caracteres</p>
+          </div>
+
+          <div class="form-group">
+            <label for="confirm-password">CONFIRMAR CONTRASEÑA</label>
+            <input type="password" id="confirm-password" placeholder="••••••••" autocomplete="new-password">
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn-primary" id="btn-register">CREAR CUENTA →</button>
+          </div>
+        </div>
+
+        <p class="auth-footer-link">
+          ¿Ya tienes cuenta? <a href="/login">Inicia sesión aquí</a>
+        </p>
+
+      </div>
+    </div>
+
+    <footer>© 2651 CURSOSDB — TODOS LOS DERECHOS RESERVADOS</footer>
+
+    <script>
+      function mostrarAlerta(msg, tipo = 'error') {
+        const area = document.getElementById('alert-area')
+        area.innerHTML = `<div class="alert alert-${tipo}">${msg}</div>`
+        if (tipo === 'success') {
+          setTimeout(() => area.innerHTML = '', 3500)
+        }
+      }
+
+      document.getElementById('btn-register').addEventListener('click', async () => {
+        const btn = document.getElementById('btn-register')
+
+        const nombre = document.getElementById('nombre').value.trim()
+        const email = document.getElementById('email').value.trim()
+        const password = document.getElementById('password').value
+        const confirmPassword = document.getElementById('confirm-password').value
+
+        // Validaciones del lado del cliente
+        if (!nombre || !email || !password || !confirmPassword) {
+          return mostrarAlerta('Todos los campos son obligatorios.')
+        }
+
+        if (password.length < 8) {
+          return mostrarAlerta('La contraseña debe tener al menos 8 caracteres.')
+        }
+
+        if (password !== confirmPassword) {
+          return mostrarAlerta('Las contraseñas no coinciden.')
+        }
+
+        btn.disabled = true
+        btn.textContent = 'CREANDO CUENTA...'
+
+        const res = await fetch('/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nombre, email, password })
+        })
+
+        const data = await res.json()
+
+        if (res.ok) {
+          mostrarAlerta('Cuenta creada correctamente. Redirigiendo...', 'success')
+          setTimeout(() => window.location.href = '/login', 1500)
+        } else {
+          mostrarAlerta(data.error ?? 'Error al crear la cuenta.')
+          btn.disabled = false
+          btn.textContent = 'CREAR CUENTA →'
+        }
+      })
+    </script>
+
+</body>
+
+</html>

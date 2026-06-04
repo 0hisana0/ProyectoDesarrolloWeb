@@ -1,0 +1,47 @@
+services:
+
+  mysql-app:
+    container_name: conecta2
+    image: mysql:8.0
+    restart: always
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_USER: conecta2_user
+      MYSQL_PASSWORD: adminbd
+      MYSQL_DATABASE: conecta2
+    volumes:
+      - mysql-app-volume:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/01-init.sql
+    labels:
+      - "com.conecta2.service=mysql-app"
+      - "com.conecta2.role=database"
+      - "com.conecta2.backup=enabled"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: ./api/Dockerfile
+    restart: always
+    depends_on:
+      mysql-app:
+        condition: service_healthy
+    environment:
+      PORT: 3001
+      DB_HOST: mysql-app
+      DB_PORT: 3306
+      DB_USER: conecta2_user
+      DB_PASSWORD: adminbd
+      DB_NAME: conecta2
+      SESSION_SECRET: admin
+    ports:
+      - "3001:3001"
+
+volumes:
+  mysql-app-volume:
