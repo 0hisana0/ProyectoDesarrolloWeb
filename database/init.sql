@@ -1,14 +1,14 @@
-
-
 -- ==========================================
--- TABLA USUARIO
+-- TABLA USUARIOS
 -- ==========================================
 
-CREATE TABLE Usuario (
-    id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
+    rol VARCHAR(20) DEFAULT 'user',
+    activo TINYINT(1) DEFAULT 1,
     foto_perfil VARCHAR(255),
     biografia TEXT,
     fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -27,7 +27,7 @@ CREATE TABLE Publicacion (
 
     CONSTRAINT fk_publicacion_usuario
         FOREIGN KEY (id_usuario)
-        REFERENCES Usuario(id_usuario)
+        REFERENCES usuarios(id)
         ON DELETE CASCADE
 );
 
@@ -49,7 +49,7 @@ CREATE TABLE Comentario (
 
     CONSTRAINT fk_comentario_usuario
         FOREIGN KEY (id_usuario)
-        REFERENCES Usuario(id_usuario)
+        REFERENCES usuarios(id)
         ON DELETE CASCADE
 );
 
@@ -65,7 +65,7 @@ CREATE TABLE `Like` (
 
     CONSTRAINT fk_like_usuario
         FOREIGN KEY (id_usuario)
-        REFERENCES Usuario(id_usuario)
+        REFERENCES usuarios(id)
         ON DELETE CASCADE,
 
     CONSTRAINT fk_like_publicacion
@@ -78,7 +78,7 @@ CREATE TABLE `Like` (
 );
 
 -- ==========================================
--- ÍNDICES PARA OPTIMIZACIÓN
+-- INDICES PARA OPTIMIZACION
 -- ==========================================
 
 CREATE INDEX idx_publicacion_fecha
@@ -89,3 +89,14 @@ ON Comentario(id_publicacion);
 
 CREATE INDEX idx_like_publicacion
 ON `Like`(id_publicacion);
+
+-- ==========================================
+-- TABLA SESSIONS (express-mysql-session)
+-- ==========================================
+
+CREATE TABLE IF NOT EXISTS sessions (
+    session_id VARCHAR(128) COLLATE utf8mb4_bin NOT NULL,
+    expires INT(11) UNSIGNED NOT NULL,
+    data MEDIUMTEXT COLLATE utf8mb4_bin,
+    PRIMARY KEY (session_id)
+);
