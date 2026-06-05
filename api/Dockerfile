@@ -5,7 +5,7 @@ RUN apk add --no-cache python3 make g++ && \
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY package.json ./
 
 RUN pnpm install --prod --no-frozen-lockfile && \
     pnpm rebuild bcrypt && \
@@ -13,6 +13,8 @@ RUN pnpm install --prod --no-frozen-lockfile && \
 
 COPY . .
 
-EXPOSE 3001
+RUN mkdir -p uploads
+
+EXPOSE 3000
 
 CMD ["node", "10-autentificacion.js"]

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <%- include('partials/head', { title: 'Perfil' }) %>
+</head>
+
+<body>
+
+  <%- include('partials/navbar', { currentPath: '/perfil' }) %>
+
+    <main>
+      <div class="profile-header">
+        <img src="/uploads/<%= usuario.foto_perfil || 'default.png' %>" alt="" class="avatar-large" data-inicial="<%= usuario.nombre ? usuario.nombre[0].toUpperCase() : '?' %>">
+        <div class="profile-info">
+          <h2><%= usuario.nombre %></h2>
+          <p class="email"><%= usuario.email %></p>
+          <% if (usuario.biografia) { %>
+            <p class="bio"><%= usuario.biografia %></p>
+          <% } %>
+          <% if (usuario.fecha_registro) { %>
+            <p class="email" style="margin-top:0.3rem">Miembro desde <%= new Date(usuario.fecha_registro).toLocaleDateString('es-MX') %></p>
+          <% } %>
+        </div>
+        <% if (usuarioActual && usuarioActual.id === usuario.id_usuario) { %>
+          <a href="/perfil" class="btn btn-secondary btn-sm" style="margin-left:auto">EDITAR PERFIL</a>
+        <% } %>
+      </div>
+
+      <div class="page-header">
+        <h1>Publicaciones</h1>
+      </div>
+
+      <% if (typeof error !== 'undefined' && error) { %>
+        <div class="alert alert-error"><%= error %></div>
+      <% } %>
+
+      <% if (typeof publicaciones !== 'undefined' && publicaciones.length === 0) { %>
+        <div class="empty-state">
+          <p>No hay publicaciones aún.</p>
+        </div>
+      <% } %>
+
+      <div id="feed-container">
+        <% if (typeof publicaciones !== 'undefined') { %>
+          <% publicaciones.forEach(function(pub) { %>
+            <div class="card" data-id="<%= pub.id_publicacion %>">
+              <div class="card-header">
+                <a href="/perfil/<%= pub.id_usuario %>">
+                  <img src="/uploads/<%= pub.foto_perfil || 'default.png' %>" alt="" class="avatar" data-inicial="<%= pub.nombre ? pub.nombre[0].toUpperCase() : '?' %>">
+                </a>
+                <div class="meta">
+                  <a href="/perfil/<%= pub.id_usuario %>" class="nombre"><%= pub.nombre %></a>
+                  <div class="fecha"><%= new Date(pub.fecha_publicacion).toLocaleString('es-MX') %></div>
+                </div>
+              </div>
+              <div class="card-body">
+                <p><%= pub.contenido %></p>
+                <% if (pub.imagen) { %>
+                  <img src="/uploads/<%= pub.imagen %>" alt="Imagen de publicación">
+                <% } %>
+              </div>
+              <div class="card-actions">
+                <button class="action-btn reaccion-btn <%= pub.yaReacciono ? 'reaccionado' : '' %>" data-id="<%= pub.id_publicacion %>">
+                  <span class="icon"><%= pub.yaReacciono ? '❤️' : '🤍' %></span>
+                  <span class="count"><%= pub.total_reacciones %></span>
+                </button>
+                <button class="action-btn coment-toggle" data-id="<%= pub.id_publicacion %>">
+                  💬 <span><%= pub.total_comentarios %></span>
+                </button>
+                <% if (usuarioActual && usuarioActual.id === pub.id_usuario) { %>
+                  <button class="action-btn delete-btn" data-id="<%= pub.id_publicacion %>" style="margin-left:auto;color:#ef4444">
+                    🗑️ Eliminar
+                  </button>
+                <% } %>
+              </div>
+              <div class="comentarios-section" id="comentarios-<%= pub.id_publicacion %>" style="<%= pub.comentarios && pub.comentarios.length > 0 ? '' : 'display:none' %>">
+                <% if (pub.comentarios) { %>
+                  <% pub.comentarios.forEach(function(com) { %>
+                    <div class="comentario">
+                      <img src="/uploads/<%= com.foto_perfil || 'default.png' %>" alt="" class="avatar-mini" data-inicial="<%= com.nombre ? com.nombre[0].toUpperCase() : '?' %>">
+                      <div class="comentario-body">
+                        <a href="/perfil/<%= com.id_usuario %>" class="nombre"><%= com.nombre %></a>
+                        <div class="texto"><%= com.contenido %></div>
+                        <div class="fecha"><%= new Date(com.fecha_comentario).toLocaleString('es-MX') %></div>
+                      </div>
+                    </div>
+                  <% }) %>
+                <% } %>
+                <div class="comentario-form">
+                  <input type="text" class="coment-input" placeholder="Escribe un comentario..." data-id="<%= pub.id_publicacion %>">
+                  <button class="coment-submit" data-id="<%= pub.id_publicacion %>">Enviar</button>
+                </div>
+              </div>
+            </div>
+          <% }) %>
+        <% } %>
+      </div>
+    </main>
+
+    <footer>© 2026 CONECTA2 — PROTOTIPO</footer>
+
+    <script>
+      // Reaccionar
+      document.querySelectorAll('.reaccion-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const id = btn.dataset.id
+          const icon = btn.querySelector('.icon')
+          const count = btn.querySelector('.count')
+
+          const res = await fetch('/reaccion/' + id + '/toggle', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+          })
+
+          if (res.ok) {
+            const data = await res.json()
+            count.textContent = data.total
+            if (data.reaccionado) {
+              icon.textContent = '❤️'
+              btn.classList.add('reaccionado')
+            } else {
+              icon.textContent = '🤍'
+              btn.classList.remove('reaccionado')
+            }
+          }
+        })
+      })
+
+      // Comentar
+      document.querySelectorAll('.coment-submit').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const id = btn.dataset.id
+          const input = document.querySelector('.coment-input[data-id="' + id + '"]')
+          const contenido = input.value.trim()
+
+          if (!contenido) return
+
+          const res = await fetch('/comentario/' + id, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contenido })
+          })
+
+          if (res.ok) {
+            window.location.reload()
+          }
+        })
+      })
+
+      // Toggle comentarios
+      document.querySelectorAll('.coment-toggle').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.dataset.id
+          const section = document.getElementById('comentarios-' + id)
+          if (section.style.display === 'none') {
+            section.style.display = 'block'
+          } else {
+            section.style.display = 'none'
+          }
+        })
+      })
+
+      // Eliminar publicación
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          if (!confirm('¿Eliminar esta publicación?')) return
+
+          const id = btn.dataset.id
+          const res = await fetch('/feed/' + id, { method: 'DELETE' })
+
+          if (res.ok) {
+            const card = btn.closest('.card')
+            card.style.opacity = '0'
+            setTimeout(() => card.remove(), 300)
+          } else {
+            alert('Error al eliminar la publicación.')
+          }
+        })
+      })
+    </script>
+
+</body>
+
+</html>

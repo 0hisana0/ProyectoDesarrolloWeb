@@ -2,20 +2,16 @@ import { UsuariosModel } from '../models/mysql/usuarios.model.js'
 
 export class AuthController {
 
-  // GET /login
   static loginView = (req, res) => {
-    // Si ya tiene sesión activa, redirigir al inicio
     if (req.session.usuario) return res.redirect('/')
     res.render('login', { error: null })
   }
 
-  // GET /register
   static registerView = (req, res) => {
     if (req.session.usuario) return res.redirect('/')
     res.render('register')
   }
 
-  // POST /login
   static login = async (req, res) => {
     const resultado = await UsuariosModel.login({ input: req.body })
 
@@ -23,18 +19,16 @@ export class AuthController {
       return res.status(401).json({ error: resultado.error })
     }
 
-    // Guardar usuario en sesión (sin password)
     req.session.usuario = {
-      id: resultado.id,
+      id: resultado.id_usuario,
       nombre: resultado.nombre,
       email: resultado.email,
-      rol: resultado.rol
+      foto_perfil: resultado.foto_perfil
     }
 
     res.json({ ok: true })
   }
 
-  // POST /register
   static register = async (req, res) => {
     const resultado = await UsuariosModel.register({ input: req.body })
 
@@ -45,7 +39,6 @@ export class AuthController {
     res.status(201).json({ ok: true })
   }
 
-  // POST /logout
   static logout = (req, res) => {
     req.session.destroy((err) => {
       if (err) {

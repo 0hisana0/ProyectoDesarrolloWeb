@@ -1,16 +1,15 @@
 -- ==========================================
--- TABLA USUARIOS
+-- TABLA USUARIO
 -- ==========================================
 
-CREATE TABLE usuarios (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE Usuario (
+    id_usuario INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    rol VARCHAR(20) DEFAULT 'user',
-    activo TINYINT(1) DEFAULT 1,
     foto_perfil VARCHAR(255),
     biografia TEXT,
+    activo TINYINT(1) DEFAULT 1,
     fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -27,7 +26,7 @@ CREATE TABLE Publicacion (
 
     CONSTRAINT fk_publicacion_usuario
         FOREIGN KEY (id_usuario)
-        REFERENCES usuarios(id)
+        REFERENCES Usuario(id_usuario)
         ON DELETE CASCADE
 );
 
@@ -49,46 +48,33 @@ CREATE TABLE Comentario (
 
     CONSTRAINT fk_comentario_usuario
         FOREIGN KEY (id_usuario)
-        REFERENCES usuarios(id)
+        REFERENCES Usuario(id_usuario)
         ON DELETE CASCADE
 );
 
 -- ==========================================
--- TABLA LIKE
+-- TABLA REACCION
 -- ==========================================
 
-CREATE TABLE `Like` (
-    id_like INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE Reaccion (
+    id_reaccion INT AUTO_INCREMENT PRIMARY KEY,
     id_usuario INT NOT NULL,
     id_publicacion INT NOT NULL,
-    fecha_like DATETIME DEFAULT CURRENT_TIMESTAMP,
+    fecha_reaccion DATETIME DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_like_usuario
+    CONSTRAINT fk_reaccion_usuario
         FOREIGN KEY (id_usuario)
-        REFERENCES usuarios(id)
+        REFERENCES Usuario(id_usuario)
         ON DELETE CASCADE,
 
-    CONSTRAINT fk_like_publicacion
+    CONSTRAINT fk_reaccion_publicacion
         FOREIGN KEY (id_publicacion)
         REFERENCES Publicacion(id_publicacion)
         ON DELETE CASCADE,
 
-    CONSTRAINT uq_like
+    CONSTRAINT uq_reaccion
         UNIQUE(id_usuario, id_publicacion)
 );
-
--- ==========================================
--- INDICES PARA OPTIMIZACION
--- ==========================================
-
-CREATE INDEX idx_publicacion_fecha
-ON Publicacion(fecha_publicacion);
-
-CREATE INDEX idx_comentario_publicacion
-ON Comentario(id_publicacion);
-
-CREATE INDEX idx_like_publicacion
-ON `Like`(id_publicacion);
 
 -- ==========================================
 -- TABLA SESSIONS (express-mysql-session)

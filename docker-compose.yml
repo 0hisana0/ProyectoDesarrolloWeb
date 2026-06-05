@@ -10,7 +10,7 @@ services:
       MYSQL_ROOT_PASSWORD: admin
       MYSQL_USER: conecta2_user
       MYSQL_PASSWORD: adminbd
-      MYSQL_DATABASE: conecta2
+      MYSQL_DATABASE: red_social_basica
     volumes:
       - mysql-app-volume:/var/lib/mysql
       - ./database/init.sql:/docker-entrypoint-initdb.d/01-init.sql
@@ -33,15 +33,18 @@ services:
       mysql-app:
         condition: service_healthy
     environment:
-      PORT: 3001
+      PORT: 3000
       DB_HOST: mysql-app
       DB_PORT: 3306
       DB_USER: conecta2_user
       DB_PASSWORD: adminbd
-      DB_NAME: conecta2
+      DB_NAME: red_social_basica
       SESSION_SECRET: admin
     ports:
-      - "3001:3001"
+      - "3000:3000"
+    volumes:
+      - uploads-volume:/app/uploads
 
 volumes:
   mysql-app-volume:
+  uploads-volume:

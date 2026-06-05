@@ -1,4 +1,3 @@
-// Protege rutas que requieren sesión activa
 export const requireAuth = (req, res, next) => {
   if (!req.session.usuario) {
     return res.redirect('/login')
@@ -6,13 +5,12 @@ export const requireAuth = (req, res, next) => {
   next()
 }
 
-// Protege rutas exclusivas para administradores
 export const requireAdmin = (req, res, next) => {
   if (!req.session.usuario) {
     return res.redirect('/login')
   }
 
-  if (req.session.usuario.rol !== 'admin') {
+  if (req.session.usuario.id && req.session.usuario.rol !== 'admin') {
     return res.status(403).json({
       error: 'No tienes permisos para realizar esta acción'
     })
@@ -21,13 +19,11 @@ export const requireAdmin = (req, res, next) => {
   next()
 }
 
-// Expone el usuario en todas las vistas EJS automáticamente
 export const setLocals = (req, res, next) => {
   res.locals.usuarioActual = req.session.usuario ?? null
   next()
 }
 
-// Desactiva caché en rutas protegidas
 export const noCache = (req, res, next) => {
   res.set({
     'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',

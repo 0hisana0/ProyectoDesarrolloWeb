@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <%- include('partials/head', { title: 'Editar Perfil' }) %>
+</head>
+
+<body>
+
+  <%- include('partials/navbar', { currentPath: '/perfil' }) %>
+
+    <main>
+      <div class="page-header">
+        <h1>Editar Perfil</h1>
+      </div>
+
+      <div id="alert-area"></div>
+
+      <div class="form-box" style="max-width:500px">
+        <div style="text-align:center;margin-bottom:1.5rem">
+          <img src="/uploads/<%= usuario.foto_perfil || 'default.png' %>" alt="" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #e0e0e0" data-inicial="<%= usuario.nombre ? usuario.nombre[0].toUpperCase() : '?' %>">
+        </div>
+
+        <div class="form-group">
+          <label for="foto_perfil">FOTO DE PERFIL</label>
+          <input type="file" id="foto_perfil" accept="image/*">
+        </div>
+
+        <div class="form-group">
+          <label for="nombre">NOMBRE</label>
+          <input type="text" id="nombre" value="<%= usuario.nombre %>">
+        </div>
+
+        <div class="form-group">
+          <label for="biografia">BIOGRAFÍA</label>
+          <textarea id="biografia" maxlength="500"><%= usuario.biografia || '' %></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn-primary" id="btn-save">GUARDAR CAMBIOS</button>
+          <a href="/perfil/mi-perfil" class="btn btn-secondary">CANCELAR</a>
+        </div>
+      </div>
+    </main>
+
+    <footer>© 2026 CONECTA2 — PROTOTIPO</footer>
+
+    <script>
+      document.getElementById('btn-save').addEventListener('click', async () => {
+        const btn = document.getElementById('btn-save')
+        const formData = new FormData()
+
+        const nombre = document.getElementById('nombre').value.trim()
+        const biografia = document.getElementById('biografia').value.trim()
+        const foto = document.getElementById('foto_perfil').files[0]
+
+        if (!nombre) return mostrarAlerta('El nombre es obligatorio.')
+
+        formData.append('nombre', nombre)
+        formData.append('biografia', biografia)
+        if (foto) formData.append('foto_perfil', foto)
+
+        btn.disabled = true
+        btn.textContent = 'GUARDANDO...'
+
+        const res = await fetch('/perfil', {
+          method: 'PUT',
+          body: formData
+        })
+
+        if (res.ok) {
+          mostrarAlerta('Perfil actualizado correctamente.', 'success')
+          setTimeout(() => window.location.href = '/perfil/mi-perfil', 1000)
+        } else {
+          const data = await res.json()
+          mostrarAlerta(data.error ?? 'Error al actualizar.')
+          btn.disabled = false
+          btn.textContent = 'GUARDAR CAMBIOS'
+        }
+      })
+
+      function mostrarAlerta(msg, tipo = 'error') {
+        const area = document.getElementById('alert-area')
+        area.innerHTML = '<div class="alert alert-' + tipo + '">' + msg + '</div>'
+      }
+    </script>
+
+</body>
+
+</html>

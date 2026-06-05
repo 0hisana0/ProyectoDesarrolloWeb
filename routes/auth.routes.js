@@ -20,7 +20,6 @@ router.post('/register',
 
 router.post('/logout', AuthController.logout)
 
-// GET /api/check-session
 router.get('/api/check-session', (req, res) => {
   if (req.session.usuario) {
     return res.json({ ok: true })

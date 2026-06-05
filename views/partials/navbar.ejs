@@ -1,46 +1,32 @@
 <nav>
-    <a href="/" class="logo">CURSOSDB</a>
+    <a href="/" class="logo">CONECTA2</a>
 
     <ul>
-        <li><a href="/" class="<%= currentPath === '/' ? 'active' : '' %>">INICIO</a></li>
-        <li><a href="/cursos-view" class="<%= currentPath === '/cursos-view' ? 'active' : '' %>">TODOS</a></li>
-        <li>
-            <a href="/cursos-view/programacion"
-                class="<%= currentPath === '/cursos-view/programacion' ? 'active' : '' %>">PROGRAMACIÓN</a>
-        </li>
-        <li>
-            <a href="/cursos-view/matematicas"
-                class="<%= currentPath === '/cursos-view/matematicas' ? 'active' : '' %>">MATEMÁTICAS</a>
-        </li>
-        <li>
-            <a href="/cursos-view/bases_de_datos"
-                class="<%= currentPath === '/cursos-view/bases_de_datos' ? 'active' : '' %>">BASES DE DATOS</a>
-        </li>
+        <li><a href="/feed">INICIO</a></li>
+        <% if (usuarioActual) { %>
+            <li><a href="/perfil/mi-perfil">MI PERFIL</a></li>
+        <% } %>
     </ul>
 
     <% if (usuarioActual) { %>
-        <span class="nav-user-name">
-            <span class="nav-user-dot"></span>
-            <%= usuarioActual.nombre %>
-                <% if (usuarioActual.rol==='admin' ) { %>
-                    <span class="nav-user-badge">ADMIN</span>
-                    <% } %>
-        </span>
-        <button class="btn-logout" id="btn-logout">SALIR</button>
-        <% } else { %>
-            <a href="/login" class="btn-nav-login">INICIAR SESIÓN</a>
-            <% } %>
+        <div class="nav-user">
+            <a href="/perfil/mi-perfil">
+                <img src="/uploads/<%= usuarioActual.foto_perfil || 'default.png' %>" alt="" class="avatar-sm" data-inicial="<%= usuarioActual.nombre ? usuarioActual.nombre[0].toUpperCase() : '?' %>">
+            </a>
+            <a href="/perfil/mi-perfil"><%= usuarioActual.nombre %></a>
+            <button class="btn-logout" id="btn-logout">SALIR</button>
+        </div>
+    <% } else { %>
+        <a href="/login" class="btn-nav-login">INICIAR SESIÓN</a>
+    <% } %>
 
-                <script>
-                    const btnLogout = document.getElementById('btn-logout')
-                    if (btnLogout) {
-                        btnLogout.addEventListener('click', async () => {
-                            await fetch('/logout', { method: 'POST' })
-                            // replace() elimina la página actual del historial
-                            // el botón "atrás" no podrá regresar a ella
-                            window.location.replace('/login')
-                        })
-                    }
-                </script>
-
+    <script>
+        const btnLogout = document.getElementById('btn-logout')
+        if (btnLogout) {
+            btnLogout.addEventListener('click', async () => {
+                await fetch('/logout', { method: 'POST' })
+                window.location.replace('/login')
+            })
+        }
+    </script>
 </nav>

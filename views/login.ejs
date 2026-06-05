@@ -14,43 +14,40 @@
 
       .auth-box {
         width: 100%;
-        max-width: 420px;
+        max-width: 400px;
       }
 
       .auth-header {
         margin-bottom: 2rem;
-      }
-
-      .auth-header .label {
-        font-family: 'Space Mono', monospace;
-        font-size: 0.72rem;
-        color: #c8f04a;
-        letter-spacing: 0.15em;
-        text-transform: uppercase;
-        margin-bottom: 0.8rem;
+        text-align: center;
       }
 
       .auth-header h1 {
-        font-size: 2.2rem;
+        font-size: 1.8rem;
         font-weight: 800;
-        line-height: 1.1;
       }
 
       .auth-header h1 span {
-        color: #c8f04a;
+        color: #6366f1;
+      }
+
+      .auth-header p {
+        font-size: 0.85rem;
+        color: #888;
+        margin-top: 0.4rem;
       }
 
       .auth-footer-link {
-        font-family: 'Space Mono', monospace;
-        font-size: 0.72rem;
-        color: #555;
+        font-size: 0.85rem;
+        color: #888;
         margin-top: 1.5rem;
         text-align: center;
       }
 
       .auth-footer-link a {
-        color: #c8f04a;
+        color: #6366f1;
         text-decoration: none;
+        font-weight: 600;
       }
 
       .auth-footer-link a:hover {
@@ -67,47 +64,50 @@
       <div class="auth-box">
 
         <div class="auth-header">
-          <p class="label">Acceso al sistema</p>
           <h1>Iniciar <span>Sesión</span></h1>
+          <p>Bienvenido de vuelta a RedSocial</p>
         </div>
 
-        <% if (typeof error !=='undefined' && error) { %>
-          <div class="alert alert-error">
-            <%= error %>
+        <% if (typeof error !== 'undefined' && error) { %>
+          <div class="alert alert-error"><%= error %></div>
+        <% } %>
+
+        <div id="alert-area"></div>
+
+        <div class="form-box">
+          <div class="form-group">
+            <label for="email">EMAIL</label>
+            <input type="email" id="email" name="email" placeholder="correo@ejemplo.com" autocomplete="email">
           </div>
-          <% } %>
 
-            <div class="form-box">
-              <div class="form-group">
-                <label for="email">EMAIL</label>
-                <input type="email" id="email" name="email" placeholder="correo@ejemplo.com" autocomplete="email">
-              </div>
+          <div class="form-group">
+            <label for="password">CONTRASEÑA</label>
+            <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password">
+          </div>
 
-              <div class="form-group">
-                <label for="password">CONTRASEÑA</label>
-                <input type="password" id="password" name="password" placeholder="••••••••"
-                  autocomplete="current-password">
-              </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" id="btn-login" style="width:100%">ENTRAR</button>
+          </div>
+        </div>
 
-              <div class="form-actions">
-                <button class="btn btn-primary" id="btn-login">ENTRAR →</button>
-              </div>
-            </div>
-
-            <p class="auth-footer-link">
-              ¿No tienes cuenta? <a href="/register">Regístrate aquí</a>
-            </p>
+        <p class="auth-footer-link">
+          ¿No tienes cuenta? <a href="/register">Regístrate aquí</a>
+        </p>
 
       </div>
     </div>
 
-    <footer>© 2651 CURSOSDB — TODOS LOS DERECHOS RESERVADOS</footer>
+    <footer>© 2026 CONECTA2 — PROTOTIPO</footer>
 
     <script>
       document.getElementById('btn-login').addEventListener('click', async () => {
         const btn = document.getElementById('btn-login')
         const email = document.getElementById('email').value.trim()
         const password = document.getElementById('password').value
+
+        if (!email || !password) {
+          return mostrarError('Todos los campos son obligatorios.')
+        }
 
         btn.disabled = true
         btn.textContent = 'VERIFICANDO...'
@@ -122,21 +122,15 @@
           window.location.href = '/'
         } else {
           const data = await res.json()
-          // Re-renderizar con error recargando o mostrar alerta inline
-          showError(data.error ?? 'Credenciales incorrectas')
+          mostrarError(data.error ?? 'Credenciales incorrectas')
           btn.disabled = false
-          btn.textContent = 'ENTRAR →'
+          btn.textContent = 'ENTRAR'
         }
       })
 
-      function showError(msg) {
-        let alert = document.querySelector('.alert-error')
-        if (!alert) {
-          alert = document.createElement('div')
-          alert.className = 'alert alert-error'
-          document.querySelector('.auth-box').insertBefore(alert, document.querySelector('.form-box'))
-        }
-        alert.textContent = msg
+      function mostrarError(msg) {
+        const area = document.getElementById('alert-area')
+        area.innerHTML = '<div class="alert alert-error">' + msg + '</div>'
       }
     </script>
 
