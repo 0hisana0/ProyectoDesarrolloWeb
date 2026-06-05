@@ -1,9 +1,0 @@
-node_modules
-.git
-database
-data
-docker-compose.yml
-api
-frontend
-*.md
-Desarrollo Web

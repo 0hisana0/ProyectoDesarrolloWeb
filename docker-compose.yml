@@ -27,7 +27,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: ./api/Dockerfile
+      dockerfile: ./Dockerfile
     restart: always
     depends_on:
       mysql-app:
